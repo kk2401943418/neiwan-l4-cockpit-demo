@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark light"><link rel="icon" href="data:,">
+<title>内湾 · L4 / 人工双模式交互 Demo</title>
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<header class="page-header">
+  <div class="brand"><span class="brand-mark" aria-hidden="true">N</span><div><span class="eyebrow">NEIWAN / INTERACTION STUDY</span><h1>内湾 · 双门屏座舱</h1></div></div>
+  <div class="header-note"><strong>72 项任务，完整保留</strong><span>L4 门屏为主 · 人工驾驶实体为主</span></div>
+</header>
+<main>
+  <div class="usage-guide"><strong>体验双模式</strong><span>① 在外部演示台载入场景</span><span>② 使用门屏或实体控件模拟</span><span>③ 在中央左 / 中 / 右区查看结果</span></div>
+  <section class="scenario-bar compact-scenarios" aria-label="外部演示工具，载入会重置示例状态">
+    <div><span class="section-kicker">外部演示台 · 场景载入将重置示例值</span><p>实际交权请使用下方流程，界面随驾驶权变化。</p></div>
+    <div class="scenario-actions"><button data-scene="l4">L4 运行</button><button data-scene="manual">人工行驶</button><button data-scene="parked">人工驻车</button><button data-scene="handover">恢复准备</button><button data-scene="fault">系统异常</button><button data-sim="driver-ready" id="ready-simulator">模拟人员 / 接口就绪</button></div>
+  </section>
+  <section class="cockpit" aria-label="座舱交互布局">
+    <div class="layout-caption"><span>01 / 中央大连屏</span><span>信息显示 · 无触控按钮</span></div>
+    <div class="dash-frame">
+      <section id="panorama" aria-label="中央只读大连屏，左中右三区">
+        <div class="central-mode-banner"><strong id="mode-main"></strong><p id="channel-explanation"></p><span id="takeover-progress"></span></div>
+        <section id="zone-L" class="display-zone" aria-label="左区驾驶主控">
+          <header class="zone-heading"><span class="zone-index">L</span><h2>驾驶主控</h2><span>左区</span></header>
+          <div class="zone-overview"><div class="drive-top"><strong id="summary-role">人工驾驶</strong><span><b id="summary-speed">0</b> km/h · <b id="summary-gear">P</b></span></div><p id="summary-wheel">方向盘已展开</p><p id="summary-safety">车辆状态正常</p></div>
+          <div class="zone-task"><h3 id="zone-title-L">驾驶状态</h3><div id="state-L" class="zone-state"></div></div>
+          <div id="result-L" class="zone-result" role="status" aria-live="polite">左门驾驶操作的结果显示在这里</div>
+        </section>
+        <section id="zone-C" class="display-zone" aria-label="中区中央共享">
+          <header class="zone-heading"><span class="zone-index">C</span><h2>中央共享</h2><span>中区</span></header>
+          <div class="zone-overview"><strong id="summary-nav">前往 西岸美术馆</strong><p id="summary-climate">主驾 22° · 副驾 23°</p><p id="summary-shared-media">共享媒体</p><p id="summary-notice">系统信息自动显示</p><div id="summary-parking" hidden></div></div>
+          <div class="zone-task"><h3 id="zone-title-C">共享行程</h3><div id="state-C" class="zone-state"></div></div>
+          <div id="result-C" class="zone-result" role="status" aria-live="polite">两侧门板的共享操作，结果显示在这里</div>
+        </section>
+        <section id="zone-R" class="display-zone" aria-label="右区副驾娱乐">
+          <header class="zone-heading"><span class="zone-index">R</span><h2>副驾娱乐</h2><span>右区</span></header>
+          <div class="zone-overview"><strong>副驾个人空间</strong><p id="summary-media">娱乐与通信</p><p>本座舒适 · 个人内容</p></div>
+          <div class="zone-task"><h3 id="zone-title-R">副驾状态</h3><div id="state-R" class="zone-state"></div></div>
+          <div id="result-R" class="zone-result" role="status" aria-live="polite">副驾个人操作的结果显示在这里</div>
+        </section>
+      </section>
+      <div class="dash-trim" aria-hidden="true"></div>
+    </div>
+
+    <section id="physical-section" class="physical-section" aria-labelledby="physical-title">
+      <div class="physical-heading"><div><span class="section-kicker">实体控件模拟 · 位置与真实触觉尚未验证</span><h2 id="physical-title">主驾实体核心</h2></div><span>常用旋钮与关键键</span></div>
+      <div id="physical-safety" data-door="L" data-channel="physical" class="physical-safety"></div>
+      <details id="physical-details"><summary>方向盘、拨杆与门板本地开关</summary>
+        <div class="physical-columns"><section><h3 class="physical-side-title">主驾实体控件</h3><div id="physical-L" data-door="L" data-channel="physical" class="physical-grid"></div></section><section><h3 class="physical-side-title">副驾本座实体控件</h3><div id="physical-R" data-door="R" data-channel="physical" class="physical-grid"></div></section></div>
+      </details>
+    </section>
+    <div class="doors-layout">
+      <section class="door-frame left-door" id="door-L" data-door="L" aria-label="左侧主驾门触控屏">
+        <div class="door-title"><div><span class="section-kicker">02 / LEFT DOOR</span><h2>左门屏 <small>主驾</small></h2></div><span class="door-side-badge">L</span></div>
+        <div class="door-screen">
+          <div class="door-quick" aria-label="左门固定辅助入口"><button data-open="A01">驾驶状态与流程</button><button data-action="manual-request">请求恢复人工</button><button data-action="voice-wake">语音入口</button></div>
+          <div class="door-catalog"><nav id="door-tabs-L" class="door-tabs" aria-label="左门任务分类"></nav><div id="door-list-L" class="door-task-list"></div></div>
+          <div id="slot-L" class="door-slot"></div>
+        </div>
+        <div class="door-armrest" aria-hidden="true"><span>驾驶权流程 · 本座舒适 · 共享任务</span></div>
+      </section>
+
+      <div class="console-space" aria-label="中央无操作控件"><span aria-hidden="true">↑</span><small>结果看大屏<br>触控在两门</small></div>
+
+      <section class="door-frame right-door" id="door-R" data-door="R" aria-label="右侧副驾门触控屏">
+        <div class="door-title"><div><span class="section-kicker">03 / RIGHT DOOR</span><h2>右门屏 <small>副驾</small></h2></div><span class="door-side-badge">R</span></div>
+        <div class="door-screen">
+          <div class="door-quick" aria-label="右门固定辅助入口"><button data-open="D07">本座温度</button><button data-open="F05">个人消息</button><button data-open="E07">通话</button></div>
+          <div class="door-catalog"><nav id="door-tabs-R" class="door-tabs" aria-label="右门任务分类"></nav><div id="door-list-R" class="door-task-list"></div></div>
+          <div id="slot-R" class="door-slot"></div>
+        </div>
+        <div class="door-armrest" aria-hidden="true"><span>本座舒适与隐私 · 共享行程与媒体</span></div>
+      </section>
+    </div>
+  </section>
+
+  <details id="review-tools" class="review-tools"><summary>演示与核对工具 <span>场景切换 / 完整 72 项清单 / 事件模拟</span></summary>
+
+  <section class="audit-section" aria-labelledby="audit-title">
+    <div class="section-heading"><div><span class="section-kicker">TASK COVERAGE</span><h2 id="audit-title">72 项任务核对表</h2><p>保留原编号与原任务。信息类由系统主动提示；查阅入口不等于操作按钮。</p></div><a class="file-link" href="./双模式按钮规划-v3-72项.csv" download>下载完整分配表 ↗</a></div>
+    <div class="filters"><label class="search-label">查找任务<input id="search" type="search" placeholder="输入编号、任务或关键词"></label><label>类别<select id="filter-type"><option value="">全部类别</option><option value="主动操作">主动操作</option><option value="系统提示">系统提示</option><option value="操作＋提示">操作＋提示</option></select></label><label>频次<select id="filter-freq"><option value="">全部频次</option><option value="high">高频</option><option value="low">低频</option><option value="event">事件触发</option><option value="state">常驻状态</option></select></label><label>入口<select id="filter-actor"><option value="">全部入口</option><option value="L">左门可查</option><option value="R">右门可查</option></select></label></div>
+    <div class="audit-nav"><nav id="group-nav" aria-label="任务模块"></nav><span id="task-count"></span></div>
+    <div id="task-list" class="task-list"></div>
+  </section>
+
+  <section class="lab-section" aria-label="外部演示检查台">
+    <div class="section-heading"><div><span class="section-kicker">SIMULATION TOOLS</span><h2>外部演示检查台</h2><p>以下用于模拟来电、故障、行程等事件，不属于车内屏幕或按钮。</p></div></div>
+    <div class="lab-grid"><div class="inspector-panel"><div id="inspector"></div><div id="sim-actions" class="sim-actions"></div></div><div class="log-panel"><h3>最近操作反馈</h3><ol id="event-log"></ol></div></div>
+  </section>
+  </details>
+</main>
+<footer><span>内湾 / L4 座舱交互研究 · 双门屏方案</span><span>本地概念演示。车辆、机构、人机触达与安全性能均未验证。</span></footer>
+<script src="./tasks.js"></script><script src="./door-layout.js"></script><script src="./mode-policy.js"></script><script src="./app.js"></script>
+</body></html>
